@@ -1,0 +1,13 @@
+#!/bin/sh
+
+[ -e "./firewall.txt.gz" ] || { printf "Nothing Happened!\nhttps://www.ip2location.com/free/visitor-blocker\n"; exit 1;}
+
+# You can get your own 'firewall.txt.gz' here:
+# https://www.ip2location.com/free/visitor-blocker
+gzip -d firewall.txt.gz
+
+sed -i '/^#.*/d;s/^/-A ufw-before-output -d /g;s/$/\t -j REJECT/g' firewall.txt
+sed -i '/COMMIT/d' /etc/ufw/before.rules
+cat firewall.txt >> /etc/ufw/before.rules
+printf "\nCOMMIT" >> /etc/ufw/before.rules
+
