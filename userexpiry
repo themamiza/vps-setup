@@ -1,0 +1,21 @@
+#!/bin/sh
+
+[ $# -eq 0 ] && printf "Usage: %s USERNAME\n" "$(basename "$0")" && exit 1
+
+getent passwd "$1" > /dev/null 2>&1 || { printf "Invalid username: %s\n" "$1"; exit 1; }
+
+username="$1"
+
+current_year=$(date +%Y)
+current_month=$(date +%m)
+current_day=$(date +%d)
+
+year=$(whiptail --title "Select Year" --inputbox "Enter the year (e.g., 2024):" 10 60 "$current_year" 3>&1 1>&2 2>&3)
+month=$(whiptail --title "Select Month" --inputbox "Enter the month (1-12):" 10 60 "$current_month" 3>&1 1>&2 2>&3)
+day=$(whiptail --title "Select Day" --inputbox "Enter the day (1-31):" 10 60 "$current_day" 3>&1 1>&2 2>&3)
+
+expiry_date="$year-$month-$day"
+
+date -d "$expiry_date" > /dev/null 2>&1 || { printf "Invalid date: %s\nNothing Happened!\n" "$expiry_date"; exit 1; }
+
+chage -E "$expiry_date" "$username"

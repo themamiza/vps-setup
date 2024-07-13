@@ -1,0 +1,26 @@
+#!/bin/sh
+
+username=$(whiptail --inputbox "First, please enter a name for the user account." 10 60 3>&1 1>&2 2>&3 3>&1) || exit 1
+while ! echo "$username" | grep -q "^[a-z_][a-z0-9_-]*$"; do
+    username=$(whiptail --nocancel --inputbox "Username not valid. Give a username beginning with a letter, with only lowercase letters, - or _." 10 60 3>&1 1>&2 2>&3 3>&1)
+done
+password1=$(whiptail --nocancel --passwordbox "Enter a password for that user." 10 60 3>&1 1>&2 2>&3 3>&1)
+password2=$(whiptail --nocancel --passwordbox "Retype password." 10 60 3>&1 1>&2 2>&3 3>&1)
+while ! [ "$password1" = "$password2" ]; do
+    unset pass2
+    password1=$(whiptail --nocancel --passwordbox "Passwords do not match.\\n\\nEnter password again." 10 60 3>&1 1>&2 2>&3 3>&1)
+    password2=$(whiptail --nocancel --passwordbox "Retype password." 10 60 3>&1 1>&2 2>&3 3>&1)
+done
+
+shellchoice=$(whiptail --notags --menu "Choose login shell for the user." 12 60 4\
+    "1" "bash" \
+    "2" "nologin" 3>&1 1>&2 2>&3 3>&1)
+
+case $shellchoice in
+    1) loginshell="/usr/bin/bash";;
+    2) loginshell="/sbin/nologin";;
+esac
+
+useradd -s "$loginshell" "$username" -p "$password1"
+
+printf "%s %s\n" "$username" "$password1" >> .userlogin

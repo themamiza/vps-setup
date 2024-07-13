@@ -1,0 +1,8 @@
+#!/bin/sh
+
+while read -r LINE; do
+    username="$(echo "$LINE" | cut -d " " -f 1)"
+    password="$(echo "$LINE" | cut -d " " -f 2)"
+
+    useradd -s /sbin/nologin "$username" -p "$password"
+done < .userlogin
