@@ -1,0 +1,29 @@
+#!/usr/bin/python3
+
+import os
+import csv
+
+def run(command:str):
+    stream = os.popen(command)
+    output = stream.read()
+    return output.strip()
+
+def check_connections(username, max_connection):
+    res = run(f'pgrep -u {username} sshd')
+    res = res.split()
+    if len(res)>max_connection:
+        for pid in res[:-1*max_connection]:
+            run(f'kill -9 {pid}')
+
+with open('.userlogin', 'r') as file:
+    username = list()
+    max_connection = list()
+
+    userlogin = csv.reader(file)
+
+    for row in userlogin:
+        username.append(row[0])
+        max_connection.append(row[2])
+
+for i in range(0, len(username)):
+    check_connections(username[i], int(max_connection[i]))
