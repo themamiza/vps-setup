@@ -1,0 +1,16 @@
+#!/bin/sh
+
+clear
+while true; do
+    while read -r LINE; do
+        username="$(echo "$LINE" | cut -d "," -f 1)"
+
+        connection_count=$(pgrep -u "$username" sshd | wc -l)
+        [ "$connection_count" = "0" ] && printf "[ ] %s\n" "$username" && continue
+
+        printf "[%s] %s\n" "$connection_count" "$username"
+
+    done < .userlogin
+    sleep 1
+    clear
+done
