@@ -1,12 +1,11 @@
 #!/bin/sh
 
-printf "# Updating the system
-#> apt update && apt upgrade\n"
+printf "# Updating the system\n#> apt update && apt upgrade\n"
 
 apt update && apt upgrade
 
 printf "# Installing programs\n"
-progs="tmux python ufw htop"
+progs="tmux python3 ufw htop"
 for p in $progs; do
     printf "#> apt install %s\n" "$p"
     apt install "$p" -y
