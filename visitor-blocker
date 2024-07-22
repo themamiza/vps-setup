@@ -2,6 +2,13 @@
 
 [ -e "./firewall.txt.gz" ] || { printf "Nothing Happened!\nhttps://www.ip2location.com/free/visitor-blocker\n"; exit 1;}
 
+ufw disable
+ufw reset --force
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow ssh
+ufw allow 22
+
 # You can get your own 'firewall.txt.gz' here:
 # https://www.ip2location.com/free/visitor-blocker
 gzip -d firewall.txt.gz
@@ -11,3 +18,4 @@ sed -i '/COMMIT/d' /etc/ufw/before.rules
 cat firewall.txt >> /etc/ufw/before.rules
 printf "\nCOMMIT" >> /etc/ufw/before.rules
 
+ufw enable
