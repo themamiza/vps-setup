@@ -3,7 +3,7 @@
 [ -e "./firewall.txt.gz" ] || { printf "Nothing Happened!\nhttps://www.ip2location.com/free/visitor-blocker\n"; exit 1;}
 
 ufw disable
-ufw reset --force
+ufw reset
 ufw default deny incoming
 ufw default allow outgoing
 ufw allow ssh
