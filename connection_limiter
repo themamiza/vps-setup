@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import os
-import csv
 
 def run(command:str):
     stream = os.popen(command)
@@ -15,15 +14,13 @@ def check_connections(username, max_connection):
         for pid in res[:-1*max_connection]:
             run(f'kill -9 {pid}')
 
-with open('.userlogin', 'r') as file:
+with open('.userlogin', 'r') as userlogin:
     username = list()
     max_connection = list()
 
-    userlogin = csv.reader(file)
-
-    for row in userlogin:
-        username.append(row[0])
-        max_connection.append(row[2])
+    for line in userlogin:
+        username.append(line.split()[0])
+        max_connection.append(line.split()[2])
 
 for i in range(0, len(username)):
     check_connections(username[i], int(max_connection[i]))
